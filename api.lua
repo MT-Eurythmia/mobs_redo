@@ -2400,9 +2400,8 @@ local mob_step = function(self, dtime)
 	local pos = self.object:getpos()
 	local yaw = 0
 
-	-- when lifetimer expires remove mob (except npc and tamed)
-	if self.type ~= "npc"
-	and not self.tamed
+	-- when lifetimer expires remove mob (except tamed)
+	if not self.tamed
 	and self.state ~= "attack"
 	and remove_far ~= true
 	and self.lifetimer < 20000 then
