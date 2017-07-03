@@ -1,9 +1,9 @@
 
--- Mobs Api (2nd July 2017)
+-- Mobs Api (3rd July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170630"
+mobs.version = "20170703"
 
 
 -- Intllib
@@ -3318,7 +3318,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 		else
 			minetest.chat_send_player(name, S("Missed!"))
 
-			mob_sound(self, "mobs_swing")
+			mob_sound(self, "swing")
 		end
 	end
 
@@ -3359,7 +3359,7 @@ function mobs:protect(self, clicker)
 
 	effect(self.object:getpos(), 25, "mobs_protect_particle.png", 0.5, 4, 2, 15)
 
-	mob_sound(self, "mobs_spell")
+	mob_sound(self, "spell")
 
 	return true
 end

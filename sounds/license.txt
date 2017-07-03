@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 Creative Commons sounds from Freesound.org
 
 mobs_swing.ogg by qubodup
 mobs_spell.ogg by littletobotsoundfactory
+=======
+Creative Commons License sounds from Freesound.org
+
+swing.ogg by qubodup
+spell.ogg by littletobotsoundfactory
+>>>>>>> 9494972... add visual/sound when protecting mob, also when using net/lasso
