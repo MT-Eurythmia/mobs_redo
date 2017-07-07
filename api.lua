@@ -1,9 +1,9 @@
 
--- Mobs Api (5th July 2017)
+-- Mobs Api (7th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170705"
+mobs.version = "20170707"
 
 
 -- Intllib
@@ -3062,9 +3062,9 @@ function mobs:register_arrow(name, def)
 
 					if entity
 					and self.hit_mob
-					and entity._cmi_is_mob == true
 					and tostring(player) ~= self.owner_id
-					and entity.name ~= self.object:get_luaentity().name then
+					and entity.name ~= self.object:get_luaentity().name
+					and entity._cmi_is_mob == true then
 
 						self.hit_mob(self, player)
 
