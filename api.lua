@@ -1,9 +1,9 @@
 
--- Mobs Api (7th July 2017)
+-- Mobs Api (8th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170707"
+mobs.version = "20170708"
 
 
 -- Intllib
