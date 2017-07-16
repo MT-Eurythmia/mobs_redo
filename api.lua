@@ -1,9 +1,9 @@
 
--- Mobs Api (9th July 2017)
+-- Mobs Api (14th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170709"
+mobs.version = "20170714"
 
 
 -- Intllib
@@ -48,7 +48,7 @@ local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 local disable_blood = minetest.setting_getbool("mobs_disable_blood")
 local creative = minetest.setting_getbool("creative_mode")
-local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
+local spawn_protected = minetest.setting_getbool("mobs_spawn_protected") ~= false
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
@@ -1694,7 +1694,8 @@ local do_states = function(self, dtime)
 
 					self.object:remove()
 
-					if minetest.get_modpath("tnt") and tnt and tnt.boom then
+					if minetest.get_modpath("tnt") and tnt and tnt.boom
+					and not minetest.is_protected(pos, "") then
 
 						tnt.boom(pos, {
 							radius = radius,
@@ -1702,7 +1703,13 @@ local do_states = function(self, dtime)
 							sound = self.sounds.explode,
 						})
 					else
-						mob_sound(self, self.sounds.explode)
+
+						minetest.sound_play(self.sounds.explode, {
+							pos = pos,
+							gain = 1.0,
+							max_hear_distance = self.sounds.distance or 32
+						})
+
 						entity_physics(pos, damage_radius)
 						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 					end
@@ -2419,7 +2426,7 @@ local mob_step = function(self, dtime)
 	local pos = self.object:getpos()
 	local yaw = 0
 
-	-- when lifetimer expires remove mob (except tamed)
+	-- Eurythmia: when lifetimer expires remove mob (except tamed)
 	if not self.tamed
 	and self.state ~= "attack"
 	and remove_far ~= true
@@ -2770,7 +2777,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- mobs cannot spawn in protected areas when enabled
-			if spawn_protected == 1
+			if not spawn_protected
 			and minetest.is_protected(pos, "") then
 --print ("--- inside protected area", name)
 				return
@@ -2969,6 +2976,38 @@ function mobs:register_arrow(name, def)
 			self.lastpos = pos
 		end
 	})
+end
+
+
+-- compatibility function
+function mobs:explosion(pos, radius)
+	local self = {sounds = {}}
+	self.sounds.explode = "tnt_explode"
+	mobs:boom(self, pos, radius)
+end
+
+
+-- make explosion with protection and tnt mod check
+function mobs:boom(self, pos, radius)
+
+	if minetest.get_modpath("tnt") and tnt and tnt.boom
+	and not minetest.is_protected(pos, "") then
+
+		tnt.boom(pos, {
+			radius = radius,
+			damage_radius = radius,
+			sound = self.sounds.explode,
+		})
+	else
+		minetest.sound_play(self.sounds.explode, {
+			pos = pos,
+			gain = 1.0,
+			max_hear_distance = self.sounds.distance or 32
+		})
+
+		entity_physics(pos, radius)
+		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+	end
 end
 
 
